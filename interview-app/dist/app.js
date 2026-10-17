@@ -56,5 +56,6 @@ function download(){const lines=['안다윤의 면접실 · 연습 결과',new D
 function renderHistory(){const h=getHistory();$('historyList').innerHTML=h.length?h.map(x=>`<details class="result-row"><summary>${esc(new Date(x.date).toLocaleString('ko-KR'))} · 평균 ${esc(x.average)}점</summary><p>${x.mode==='exam'?'실전':'연습'} 모드</p>${resultDetails(x.items)}</details>`).join(''):'<p class="small">아직 저장된 연습 기록이 없습니다.</p>';}
 $('historyBtn').onclick=()=>{renderHistory();$('history').showModal();};$('closeHistory').onclick=()=>$('history').close();$('clearHistory').onclick=()=>{if(!confirm('이 브라우저의 모든 면접 연습 기록을 삭제할까요?'))return;try{localStorage.removeItem(STORAGE);renderHistory();}catch{alert('브라우저에서 기록을 삭제할 수 없습니다. 사이트 저장공간 설정을 확인해 주세요.');}};
 root.addEventListener('beforeunload',()=>{if(recognition)recognition.abort();stopDelivery();stopSpeech();stopClock();});
+if(/Android|iPhone|iPad|iPod|Mobi/i.test(root.navigator?.userAgent||'')){$('deliveryEnabled').checked=false;}
 if(!SR)status('음성 인식 미지원 브라우저입니다. 직접 입력으로 연습하거나 지원되는 브라우저에서 열어 주세요.',true);
 })(typeof window==='undefined'?globalThis:window);

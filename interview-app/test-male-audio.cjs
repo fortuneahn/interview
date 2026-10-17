@@ -2,8 +2,8 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('nod
 const base=__dirname,bank=require('./dist/questions.js');const manifestContext={window:{}};vm.runInNewContext(fs.readFileSync(path.join(base,'dist/male-audio.js'),'utf8'),manifestContext);const manifest=manifestContext.window.MALE_AUDIO;
 const html=fs.readFileSync(path.join(base,'dist/index.html'),'utf8');
 const scripts=[...html.matchAll(/<script src="([^"]+)"/g)].map(m=>m[1]);
-assert.deepEqual(scripts.map(s=>s.split('?')[0]),['questions.js','male-audio.js','app.js'],'HTML must load male audio manifest before app initialization');
-assert.ok(scripts.every(s=>s.endsWith('?v=1.8')),'all scripts must use the current cache version');
+assert.deepEqual(scripts.map(s=>s.split('?')[0]),['questions.js','male-audio.js','delivery.js','app.js'],'HTML must load male audio manifest before app initialization');
+assert.ok(scripts.every(s=>s.endsWith('?v='+html.match(/INTERVIEW ROOM · v([\d.]+)/)[1])),'all scripts must use the current cache version');
 assert.equal(manifest.voice,'ko-KR-InJoonNeural');assert.equal(manifest.gender,'Male');assert.equal(manifest.clips.length,91);
 const clips=new Map(manifest.clips.map(c=>[c.text,c.src]));for(const q of bank)for(const field of ['text','follow','model'])assert.ok(clips.has(q[field]),q.id+' '+field);
 for(const clip of manifest.clips){const bytes=fs.readFileSync(path.join(base,'dist',clip.src));assert.ok(bytes.length>1000);assert.ok(bytes.subarray(0,3).toString()==='ID3'||(bytes[0]===255&&(bytes[1]&224)===224),'MP3 header '+clip.src);}
